@@ -1,15 +1,12 @@
 #' sc_fact_df
 #'
-#' @param filepath where sc_fact data set was read in via `get_scfact`
+#' @param filepath The path where sc_fact data set was saved via get_scfact
+#' @param outpath The local path where output data will be saved
 #'
 #' @importFrom magrittr %>%
 #' @export
 
-sc_fact_df <- function(filepath = sc_fact) {
-
-  ##read in and munge sc_fact
-
-  glamr::load_secrets()
+sc_fact_df <- function(filepath, outpath) {
 
   sc_fact_filename <- glamr::return_latest(filepath, "sc_fact_raw")
 
@@ -55,7 +52,7 @@ sc_fact_df <- function(filepath = sc_fact) {
   # df <- df %>%
   #   tidyr::unite(join_var, snl1, snl2, facility, sep = "_", na.rm = TRUE, remove = FALSE)
 
-  df %>% readr::write_csv(., paste0(Dataout, "/sc_fact_processed_",
+  df %>% readr::write_csv(., paste0(outpath, "/sc_fact_processed_",
                                         format(Sys.Date(),"%Y%m%d"), ".csv"))
 
   return(df)
