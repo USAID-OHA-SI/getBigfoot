@@ -1,11 +1,10 @@
 #' get_ppmr
 #'
-#' @param path folderpath where you want to save
-#'
+#' @param path filepath The path where ppmr data should be saved
 #' @importFrom magrittr %>%
 #' @export
 
-get_ppmr <- function(path = ppmr){
+get_ppmr <- function(path){
 
   file <- googledrive::drive_ls(googledrive::as_id("1OzobjBR-f_U8Y88N3fvEvlaMDjpb2pMn"))
 
