@@ -4,10 +4,14 @@
 \alias{sc_fact_df}
 \title{sc_fact_df}
 \usage{
-sc_fact_df(filepath = sc_fact)
+sc_fact_df(filepath = here::here("Data", "sc_fact"), outpath, download = F)
 }
 \arguments{
-\item{filepath}{where sc_fact data set was read in via \code{get_scfact}}
+\item{filepath}{The path where sc_fact data set was saved via get_scfact.}
+
+\item{outpath}{The local path where output data will be saved}
+
+\item{download}{Whether to download a new version of sc_fact}
 }
 \description{
 sc_fact_df

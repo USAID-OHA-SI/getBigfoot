@@ -1,61 +1,75 @@
 #' sc_fact_df
 #'
-#' @param filepath The path where sc_fact data set was saved via get_scfact
+#' @param filepath The path where sc_fact data set was saved via get_scfact.
 #' @param outpath The local path where output data will be saved
+#' @param download Whether to download a new version of sc_fact
 #'
 #' @importFrom magrittr %>%
 #' @export
 
-sc_fact_df <- function(filepath, outpath) {
+sc_fact_df <- function(filepath = here::here("Data", "sc_fact"), outpath, download = F) {
 
-  sc_fact_filename <- glamr::return_latest(filepath, "sc_fact_raw")
+  # download sc_fact_collated if necessary
+  if(download == T){
+    folder <- "1A2VfmKOxfmmN3h3P_hTI-B5V1B3KSZlx"
+    files_in_folder <- googledrive::drive_ls(googledrive::as_id(folder)) %>%
+      googledrive::drive_reveal("created_time") %>%
+      dplyr::filter(stringr::str_detect(name, "collated")) %>%
+      dplyr::arrange(created_time)
+    googledrive::drive_download(file = files_in_folder$id[1],
+                                path = paste0(filepath, "/", files_in_folder$name[1]))
+  }
 
-  df <- readr::read_csv(sc_fact_filename,
-                        col_types = cols(.default = "c")) %>%
-    janitor::clean_names() %>%
-    dplyr::mutate_at(vars(soh, ami, mos), ~as.numeric(.)) %>%
-    dplyr::mutate(country = str_to_sentence(country)) %>%
-    dplyr::rename(orgunituid = datim_code) %>%
-    dplyr::select(-facility_mapped, -facility_cd, -source)
+  # get latest sc_fact locally
+  files = data.frame("names" = list.files(filepath)) %>%
+    dplyr::filter(stringr::str_detect(names, "collated")) %>%
+    dplyr::arrange(dplyr::desc(names))
 
-  ## create mer period values
+  sc_fact = readr::read_csv(paste0(filepath, "/", files$names[1]))
 
-  df <- df %>%
-    mutate(period = as.Date(as.yearmon(period)),
-           mer_pd = paste0("fy",lubridate::quarter(x = period, with_year = TRUE, fiscal_start = 10),"q"),
-           fiscal_year = lubridate::quarter(x = period, with_year = TRUE, fiscal_start = 10),
-           fiscal_year = as.character(fiscal_year),
-           fiscal_year = stringr::str_remove(fiscal_year, "\\..*"))
-
-  ##read in meta
-
+  # get df_meta
   df_meta <- googlesheets4::read_sheet("1UJv_LAzcD-lkteET9wGPGmdeFn07WnFf7g8sjs-upgk",
                                        sheet = "regimen",
                                        col_types= c(.default = "c")) %>%
     dplyr::rename_all(~tolower(.)) %>%
     dplyr::mutate(mot = as.numeric(mot))
 
-  ##join df + meta
 
-  df <- df %>%
-    left_join(df_meta, by = "product")
+  # process sc_fact
+  sc_fact = sc_fact %>%
+    janitor::clean_names() %>%
+    dplyr::mutate_at(vars(soh, ami, mos), ~as.numeric(.)) %>%
+    dplyr::mutate(country = stringr::str_to_sentence(country)) %>%
+    dplyr::select(period,
+           orgunituid = datim_code,
+           product_category,
+           product,
+           sku,
+           pack_size,
+           soh,
+           ami,
+           mos) %>%
+    dplyr::left_join(df_meta, by = "product") %>%
+    dplyr::mutate(mot_ami = ami*mot,
+           mot_soh = soh*mot) %>%
+    dplyr::filter(product_type == "ARV" &
+             (stringr::str_detect(product, "Efavirenz/Lamivudine/Tenofovir DF 400") |
+                stringr::str_detect(product, "Dolutegravir/Lamivudine/Tenofovir"))) %>%
+    dplyr::filter(!stringr::str_detect(period, "2021")) %>%
+    dplyr::group_by(period,
+             orgunituid) %>%
+    dplyr::summarise(mot_ami = sum(mot_ami, na.rm = T),
+              mot_soh = sum(mot_soh, na.rm = T))
 
-  df <- df %>%
-    mutate(mot_ami = ami*mot,
-           mot_soh = soh*mot)
+  # Save processed file
+  readr::write_csv(sc_fact, paste0(filepath, "/sc_fact/", "sc_fact_processed_", Sys.Date(), ".csv"))
 
-  #create indicator field, reshape, and select
-  df <- df %>%
-    gather(indicator, value, colnames(select_if(., is.numeric)), na.rm = TRUE)
+  # Write collated file to drive
+  googledrive::drive_put(media = paste0(filepath, "/sc_fact/", "sc_fact_processed_", Sys.Date(), ".csv"), path = googledrive::as_id("1A2VfmKOxfmmN3h3P_hTI-B5V1B3KSZlx"),
+                         name = paste0("sc_fact_processed_", Sys.Date(), ".csv"))
 
-  # #generate snl1+snl2+facility for joining (depreciate for now 9.7.21)
-  # df <- df %>%
-  #   tidyr::unite(join_var, snl1, snl2, facility, sep = "_", na.rm = TRUE, remove = FALSE)
 
-  df %>% readr::write_csv(., paste0(outpath, "/sc_fact_processed_",
-                                        format(Sys.Date(),"%Y%m%d"), ".csv"))
-
-  return(df)
+  return(sc_fact)
 
 }
 

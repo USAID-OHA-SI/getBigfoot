@@ -4,10 +4,10 @@
 \alias{get_scfact}
 \title{get_scfact}
 \usage{
-get_scfact(path = sc_fact)
+get_scfact(datapath = here::here("Data"))
 }
 \arguments{
-\item{path}{folderpath where you want to save}
+\item{datapath}{The path for downloaded data}
 }
 \description{
 get_scfact

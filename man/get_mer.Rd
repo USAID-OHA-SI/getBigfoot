@@ -4,12 +4,10 @@
 \alias{get_mer}
 \title{get_MER}
 \usage{
-get_mer(filepath = mer_data, filename)
+get_mer(path)
 }
 \arguments{
-\item{filepath}{path of mer data. Default = mer_data}
-
-\item{filename}{name of the MSD or genie export}
+\item{path}{The path to the raw MSD file}
 }
 \description{
 get_MER
