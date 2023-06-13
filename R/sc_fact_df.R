@@ -38,7 +38,7 @@ sc_fact_df <- function(filepath = here::here("Data", "sc_fact"), outpath, downlo
   # process sc_fact
   sc_fact = sc_fact %>%
     janitor::clean_names() %>%
-    dplyr::mutate_at(vars(soh, ami, mos), ~as.numeric(.)) %>%
+    dplyr::mutate_at(dplyr::vars(soh, ami, mos), ~as.numeric(.)) %>%
     dplyr::mutate(country = stringr::str_to_sentence(country)) %>%
     dplyr::select(period,
            orgunituid = datim_code,
