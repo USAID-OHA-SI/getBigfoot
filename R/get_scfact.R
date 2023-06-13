@@ -35,9 +35,11 @@ get_scfact <- function(datapath = here::here("Data"), upload = F){
     file.remove(paste0(datapath, "/sc_fact/", file))
   }
 
+  if(upload == T){
   # Write collated file to drive
   googledrive::drive_put(media = paste0(datapath, "/sc_fact/", "sc_fact_collated_", Sys.Date(), ".csv"), path = googledrive::as_id("1A2VfmKOxfmmN3h3P_hTI-B5V1B3KSZlx"),
                          name = paste0("sc_fact_collated_", Sys.Date(), ".csv"))
+  }
 
   return(sc_fact)
 }
