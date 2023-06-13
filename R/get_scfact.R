@@ -1,11 +1,12 @@
 #' get_scfact
 #'
 #' @param datapath The path for downloaded data
+#' @param upload Whether to upload sc_fact_collated, defaults to F
 #'
 #' @importFrom magrittr %>%
 #' @export
 
-get_scfact <- function(datapath = here::here("Data")){
+get_scfact <- function(datapath = here::here("Data"), upload = F){
 
   # Download zip file and arrange by date
   folder <- "1nRslZsUFvjdTN1Kp6pzFk7h3ZWJE-xXX"
