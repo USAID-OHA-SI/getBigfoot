@@ -52,14 +52,11 @@ sc_fact_df <- function(filepath = here::here("Data", "sc_fact"), outpath, downlo
     dplyr::left_join(df_meta, by = "product") %>%
     dplyr::mutate(mot_ami = ami*mot,
            mot_soh = soh*mot) %>%
-    dplyr::filter(product_type == "ARV" &
-             (stringr::str_detect(product, "Efavirenz/Lamivudine/Tenofovir DF 400") |
-                stringr::str_detect(product, "Dolutegravir/Lamivudine/Tenofovir"))) %>%
-    dplyr::filter(!stringr::str_detect(period, "2021")) %>%
-    dplyr::group_by(period,
-             orgunituid) %>%
-    dplyr::summarise(mot_ami = sum(mot_ami, na.rm = T),
-              mot_soh = sum(mot_soh, na.rm = T))
+    dplyr::mutate(period = as.Date(zoo::as.yearmon(period)),
+           mer_pd = paste0("fy",lubridate::quarter(x = period, with_year = TRUE, fiscal_start = 10),"q"),
+           fiscal_year = lubridate::quarter(x = period, with_year = TRUE, fiscal_start = 10),
+           fiscal_year = as.character(fiscal_year),
+           fiscal_year = stringr::str_remove(fiscal_year, "\\..*"))
 
   # Save processed file
   readr::write_csv(sc_fact, paste0(filepath, "sc_fact_processed_", Sys.Date(), ".csv"))
