@@ -52,11 +52,9 @@ sc_fact_df <- function(filepath = here::here("Data", "sc_fact"), outpath, downlo
     dplyr::left_join(df_meta, by = "product") %>%
     dplyr::mutate(mot_ami = ami*mot,
            mot_soh = soh*mot) %>%
-    dplyr::mutate(period = as.Date(zoo::as.yearmon(period)),
-           mer_pd = paste0("fy",lubridate::quarter(x = period, with_year = TRUE, fiscal_start = 10),"q"),
-           fiscal_year = lubridate::quarter(x = period, with_year = TRUE, fiscal_start = 10),
-           fiscal_year = as.character(fiscal_year),
-           fiscal_year = stringr::str_remove(fiscal_year, "\\..*"))
+    dplyr::mutate(smp = lubridate::quarter(x = lubridate::ym(period), with_year = TRUE, fiscal_start = 10),
+                  mer_pd = paste0("FY", substr(smp, 3, 4), "Q", substr(smp, 6, 6))) %>%
+    splyr::select(-smp)
 
   # Save processed file
   readr::write_csv(sc_fact, paste0(filepath, "sc_fact_processed_", Sys.Date(), ".csv"))

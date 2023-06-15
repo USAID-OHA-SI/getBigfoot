@@ -30,10 +30,11 @@ get_scfact <- function(datapath = here::here("Data"), upload = F){
   }
 
   # Save collated file and remove individual files
-  readr::write_csv(sc_fact, paste0(datapath, "/sc_fact/", "sc_fact_collated_", Sys.Date(), ".csv"))
   for(file in sc_fact_file){
     file.remove(paste0(datapath, "/sc_fact/", file))
   }
+  readr::write_csv(sc_fact, paste0(datapath, "/sc_fact/", "sc_fact_collated_", Sys.Date(), ".csv"))
+
 
   if(upload == T){
   # Write collated file to drive
