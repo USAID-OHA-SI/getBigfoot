@@ -4,10 +4,12 @@
 \alias{get_scfact}
 \title{get_scfact}
 \usage{
-get_scfact(datapath = here::here("Data"))
+get_scfact(datapath = here::here("Data"), upload = F)
 }
 \arguments{
 \item{datapath}{The path for downloaded data}
+
+\item{upload}{Whether to upload sc_fact_collated, defaults to F}
 }
 \description{
 get_scfact
