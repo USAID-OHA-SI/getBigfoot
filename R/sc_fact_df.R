@@ -60,10 +60,14 @@ sc_fact_df <- function(filepath = here::here("Data", "sc_fact"), outpath, downlo
   # Save processed file
   readr::write_csv(sc_fact, paste0(filepath, "sc_fact_processed_", Sys.Date(), ".csv"))
 
-  # Write collated file to drive
-  googledrive::drive_put(media = paste0(filepath, "sc_fact_processed_", Sys.Date(), ".csv"), path = googledrive::as_id("1A2VfmKOxfmmN3h3P_hTI-B5V1B3KSZlx"),
-                         name = paste0("sc_fact_processed_", Sys.Date(), ".csv"))
-
+  if(upload == T) {
+    # Write collated file to drive
+    googledrive::drive_put(
+      media = paste0(filepath, "sc_fact_processed_", Sys.Date(), ".csv"),
+      path = googledrive::as_id("1A2VfmKOxfmmN3h3P_hTI-B5V1B3KSZlx"),
+      name = paste0("sc_fact_processed_", Sys.Date(), ".csv")
+    )
+  }
 
   return(sc_fact)
 
