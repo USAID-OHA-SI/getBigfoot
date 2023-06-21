@@ -2,12 +2,13 @@
 #'
 #' @param filepath The path where sc_fact data set was saved via get_scfact.
 #' @param outpath The local path where output data will be saved
-#' @param download Whether to download a new version of sc_fact
+#' @param download Whether to download a new version of sc_fact, defaults to FALSE
+#' @param upload Whether to upload a new version of sc_fact, defaults to FALSE
 #'
 #' @importFrom magrittr %>%
 #' @export
 
-sc_fact_df <- function(filepath = here::here("Data", "sc_fact"), outpath, download = F) {
+sc_fact_df <- function(filepath = here::here("Data", "sc_fact"), outpath, download = F, upload = F) {
 
   # download sc_fact_collated if necessary
   if(download == T){
