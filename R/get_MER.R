@@ -21,7 +21,7 @@ get_mer <- function(path = here::here("Data"), download = F) {
     # Unzip and remove zip file
     archive::archive_extract(paste0(path, "/", files_in_folder$name[1]), dir = path)
     file.remove(paste0(path, "/", files_in_folder$name[1]))
-    path = paste0(path, "/", str_replace(files_in_folder$name[1], ".7z", ".txt"))
+    path = paste0(path, "/", stringr::str_replace(files_in_folder$name[1], ".7z", ".txt"))
   }
 
   df = gophr::read_psd(path)
