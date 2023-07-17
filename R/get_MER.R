@@ -15,7 +15,8 @@ get_mer <- function(path = here::here("Data"), download = F) {
       googledrive::drive_reveal("created_time") %>%
       dplyr::arrange(desc(created_time))
     googledrive::drive_download(file = files_in_folder$id[1],
-                                path = paste0(path, "/", files_in_folder$name[1]))
+                                path = paste0(path, "/", files_in_folder$name[1]),
+                                overwrite = T)
 
     # Unzip and remove zip file
     archive::archive_extract(paste0(path, "/", files_in_folder$name[1]), dir = path)
