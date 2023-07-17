@@ -13,7 +13,7 @@ get_mer <- function(path = here::here("Data"), download = F) {
     folder <- "1d5dhTK_UCY2RaEW_m-JHKUWjBEkWggNs"
     files_in_folder <- googledrive::drive_ls(googledrive::as_id(folder)) %>%
       googledrive::drive_reveal("created_time") %>%
-      dplyr::arrange(created_time)
+      dplyr::arrange(desc(created_time))
     googledrive::drive_download(file = files_in_folder$id[1],
                                 path = paste0(path, "/", files_in_folder$name[1]))
 
