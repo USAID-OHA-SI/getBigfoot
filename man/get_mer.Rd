@@ -4,10 +4,12 @@
 \alias{get_mer}
 \title{get_MER}
 \usage{
-get_mer(path)
+get_mer(path = here::here("Data"), download = F)
 }
 \arguments{
-\item{path}{The path to the raw MSD file}
+\item{path}{The path to the raw MSD file or the folder to save it in if download == T}
+
+\item{download}{Whether to download a new MSD file, defaults to FALSE}
 }
 \description{
 get_MER
