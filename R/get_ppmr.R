@@ -56,7 +56,8 @@ get_ppmr <- function(path = here::here("Data"), download = F){
                         values_to = "value",
                         values_drop_na = TRUE) %>%
     dplyr::filter(value !=0) %>%
-    dplyr::mutate(value = round(value,0))
+    dplyr::mutate(value = round(value,0)) %>%
+    dplyr::select(country, period, product_category, product, mer_pd, pill_count, combination_type, age_group, product_type, indicator, value)
 
   path = dirname(path)
 
