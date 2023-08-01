@@ -1,12 +1,14 @@
 Package: getBigfoot
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Downloads the MER Structured Dataset, PPMR, and SC FACT from Google Drive and prepares them for merging
+Version: 0.0.0.9000f
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    person("Alex", "Richardson", , "alerichardson@usaid.gov", role = c("aut", "cre"))
+Description: This package consists of several functions designed to assist with triangulating between the MSD, SC FACT, and PPMR. 
+    Note that it requires access to the USAID OHA Google Drive. Functions get_MER() and get_ppmr() download and perform basic cleaning on 
+    their associated datasets. Function get_scfact() only downloads the SC FACT dataset and requires subsequent use of sc_fact_df() to clean it.
+    Cleaning is minimal and primarily intended to prepare the relevant datasets for merging using a *_join() operation. Following the proper procedure,
+    users should be able to compare data from each set across standardized sites and periods for which overlapping data exists. 
+License: use_mit_license()
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
