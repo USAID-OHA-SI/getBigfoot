@@ -10,15 +10,19 @@ get_scfact <- function(datapath = here::here("Data"), upload = F){
 
   # Download zip file and arrange by date
   folder <- "1nRslZsUFvjdTN1Kp6pzFk7h3ZWJE-xXX"
-  files_in_folder <- googledrive::drive_ls(googledrive::as_id(folder)) %>%
-    googledrive::drive_reveal("created_time") %>%
-    dplyr::arrange(created_time)
-  googledrive::drive_download(file = files_in_folder$id[1],
-                              path = paste0(datapath, "/", files_in_folder$name[1]))
+  files_in_folder <-
+    googledrive::drive_ls(googledrive::as_id(folder)) %>%
+    dplyr::filter(stringr::str_detect(name, ".zip"))
 
-  # Unzip and remove zip file
-  unzip(paste0(datapath, "/", files_in_folder$name[1]), exdir = paste0(datapath, "/sc_fact"))
-  file.remove(paste0(datapath, "/", files_in_folder$name[1]))
+  downloader <- function(filename){
+    googledrive::drive_download(file = files_in_folder$id[files_in_folder$name == filename],
+                                  path = paste0(datapath, "/", filename))
+    unzip(paste0(datapath, "/", filename), exdir = paste0(datapath, "/sc_fact"))
+    file.remove(paste0(datapath, "/", filename))
+  }
+
+  purrr::map(
+    files_in_folder$name, ~downloader(.x))
 
   # Bind files together
   sc_fact_file = list.files(paste0(datapath, "/sc_fact"))
