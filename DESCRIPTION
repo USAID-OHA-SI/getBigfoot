@@ -1,6 +1,6 @@
 Package: getBigfoot
 Title: Downloads the MER Structured Dataset, PPMR, and SC FACT from Google Drive and prepares them for merging
-Version: 0.0.0.9000f
+Version: 0.0.0.9000
 Authors@R: 
     person("Alex", "Richardson", , "alerichardson@usaid.gov", role = c("aut", "cre"))
 Description: This package consists of several functions designed to assist with triangulating between the MSD, SC FACT, and PPMR. 

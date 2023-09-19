@@ -5,7 +5,6 @@
 #' @importFrom magrittr %>%
 #' @export
 #'
-#' @examples
 
 
 get_ppmr <- function(path = here::here("Data"), download = F){
