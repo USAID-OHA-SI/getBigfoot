@@ -31,22 +31,6 @@ get_mer <- function(path = here::here("Data"), download = F, simple = T) {
   if(simple == T) {
     msd = df %>%
       dplyr::filter(
-        operatingunit %in%  c(
-          "Angola",
-          "Botswana",
-          "Cameroon",
-          "Haiti",
-          "Lesotho",
-          "Malawi",
-          "Mozambique",
-          "Namibia",
-          "Nigeria",
-          "Uganda",
-          "Zambia",
-          "Zimbabwe"
-        )
-      ) %>%
-      dplyr::filter(
         trendscoarse == "15+",
         standardizeddisaggregate == "Age/Sex/HIVStatus",
         indicator == "TX_CURR"
@@ -62,7 +46,6 @@ get_mer <- function(path = here::here("Data"), download = F, simple = T) {
         facilityuid,
         facility,
         indicator,
-        disaggregate,
         standardizeddisaggregate,
         period,
         period_type
