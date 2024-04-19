@@ -24,7 +24,7 @@ get_mer <- function(path = here::here("Data"), download = F, simple = T) {
     file.remove(paste0(path, "/", files_in_folder$name[1]))
     path = paste0(path, "/MSD/", stringr::str_replace(files_in_folder$name[1], ".7z", ".txt"))
   } else {
-    path = list.files(here(path, "MSD"))[1]
+    path = here::here(path, "MSD", list.files(here(path, "MSD"))[1])
   }
 
   df = gophr::read_psd(path)
