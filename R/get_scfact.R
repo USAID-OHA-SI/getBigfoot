@@ -26,11 +26,15 @@ get_scfact <- function(datapath = here::here("Data"), upload = F, download = T){
   purrr::map(
     files_in_folder$name, ~downloader(.x))
 
+  # Define not_all_na
+  not_all_na <- function(x) any(!is.na(x))
+
   # Bind files together
   sc_fact_file = list.files(paste0(datapath, "/sc_fact"))
   sc_fact = data.frame()
   for(file in sc_fact_file){
-    temp = readr::read_csv(paste0(datapath, "/sc_fact/", file))
+    temp = readr::read_csv(paste0(datapath, "/sc_fact/", file)) %>%
+      dplyr::select(dplyr::where(not_all_na))
     sc_fact = sc_fact %>%
       dplyr::bind_rows(temp)
   }
